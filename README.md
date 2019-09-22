@@ -1,6 +1,8 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# ezwn-sched-frontend
 
-## Available Scripts
+This is the ReactJS/Apollo frontend for sched (a scheduler).
+
+## Scripts
 
 In the project directory, you can run:
 
