@@ -1,17 +1,9 @@
 import React from "react";
 
-import { gql } from "apollo-boost";
-import { graphql } from "react-apollo";
+import { TaskEdit } from "features/TaskEdit.cmp";
 
-const findTasksQuery = gql`
-  {
-    findTasks {
-      tasId
-      description
-      title
-    }
-  }
-`;
+import { graphql } from "react-apollo";
+import { findTasksQuery } from "./Task.queries";
 
 const TaksListDumb = ({ data }) => {
   if (data.loading) return <div>Loading</div>;
@@ -22,8 +14,11 @@ const TaksListDumb = ({ data }) => {
     <div>
       <ul>
         {findTasks.map(task => (
-          <li key={task.tasid}>{task.title}</li>
+          <li key={task.tasId}>{task.title}</li>
         ))}
+        <li>
+          <TaskEdit />
+        </li>
       </ul>
     </div>
   );
