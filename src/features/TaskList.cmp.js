@@ -12,9 +12,9 @@ const TaksListDumb = ({ data }) => {
 
   return (
     <div>
-      <ul>
+      <ul className="ui cards">
         {findTasks.map(task => (
-          <li key={task.tasId}>{task.title}</li>
+          <li className="ui card" key={task.tasId}>{task.title}</li>
         ))}
         <li>
           <TaskEdit />
