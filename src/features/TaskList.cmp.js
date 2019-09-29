@@ -12,13 +12,12 @@ const TaksListDumb = ({ data }) => {
 
   return (
     <div>
-      <ul className="ui cards">
+      <ul className="">
         {findTasks.map(task => (
-          <li className="ui card" key={task.tasId}>{task.title}</li>
+          <li className="card" key={task.tasId}>
+            <div className="content">{task.title}</div>
+          </li>
         ))}
-        <li>
-          <TaskEdit />
-        </li>
       </ul>
     </div>
   );
