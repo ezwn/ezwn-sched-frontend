@@ -32,6 +32,8 @@ export const TaskEditDumb = props => {
               }
             ]
           });
+
+          props.afterSubmit();
         }}
       />
     </form>
