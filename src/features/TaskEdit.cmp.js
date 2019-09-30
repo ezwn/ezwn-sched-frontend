@@ -1,6 +1,6 @@
 import React from "react";
 import { graphql } from "react-apollo";
-import { findTasksQuery, createTaskMutation } from "./Task.queries";
+import { findTasksQuery, saveTaskMutation } from "./Task.queries";
 
 export const TaskEditDumb = props => {
   const [task, setTask] = React.useState({
@@ -40,4 +40,4 @@ export const TaskEditDumb = props => {
   );
 };
 
-export const TaskEdit = graphql(createTaskMutation)(TaskEditDumb);
+export const TaskEdit = graphql(saveTaskMutation)(TaskEditDumb);

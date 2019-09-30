@@ -1,7 +1,5 @@
 import React from "react";
 
-import { TaskEdit } from "features/TaskEdit.cmp";
-
 import { graphql } from "react-apollo";
 import { findTasksQuery } from "./Task.queries";
 
