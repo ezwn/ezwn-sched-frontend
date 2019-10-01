@@ -1,41 +1,44 @@
 import React from "react";
 import { graphql } from "react-apollo";
 import { findTasksQuery, saveTaskMutation } from "./Task.queries";
+import { TaskDetailsCmp } from "./auto-components";
 
 export const TaskEditDumb = props => {
-  const [task, setTask] = React.useState({
-    description: "",
-    title: ""
-  });
+  const [task, setTask] = React.useState(
+    props.value
+      ? props.value
+      : {
+          tasId: undefined,
+          title: "",
+          description: "",
+          blocked: false,
+          status: "IDEA"
+        }
+  );
 
-  // console.log(props);
+  const mutate = () => {
+    props.mutate({
+      variables: {
+        ...task
+      },
+      refetchQueries: [
+        {
+          query: findTasksQuery
+        }
+      ]
+    });
+
+    props.afterSubmit();
+  };
+
+  const updateState = patch => {
+    setTask({ ...task, ...patch });
+  };
 
   return (
     <form onSubmit={e => e.preventDefault()}>
-      <input
-        type="text"
-        value={task.title}
-        onChange={e => setTask({ ...task, title: e.target.value })}
-      />
-      <input
-        type="submit"
-        value="+"
-        onClick={() => {
-          props.mutate({
-            variables: {
-              title: task.title,
-              description: task.description
-            },
-            refetchQueries: [
-              {
-                query: findTasksQuery
-              }
-            ]
-          });
-
-          props.afterSubmit();
-        }}
-      />
+      <TaskDetailsCmp value={task} onChange={updateState} />
+      <input type="submit" value="+" onClick={mutate} />
     </form>
   );
 };
