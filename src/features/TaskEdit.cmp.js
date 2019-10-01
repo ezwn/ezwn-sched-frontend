@@ -3,6 +3,8 @@ import { graphql } from "react-apollo";
 import { findTasksQuery, saveTaskMutation } from "./Task.queries";
 import { TaskDetailsCmp } from "./auto-components";
 
+import "./TaskEdit.cmp.css";
+
 export const TaskEditDumb = props => {
   const [task, setTask] = React.useState(
     props.value
@@ -36,9 +38,18 @@ export const TaskEditDumb = props => {
   };
 
   return (
-    <form onSubmit={e => e.preventDefault()}>
-      <TaskDetailsCmp value={task} onChange={updateState} />
-      <input type="submit" value="+" onClick={mutate} />
+    <form onSubmit={e => e.preventDefault()} className="taskEdit prim-slice-1 prim-vr">
+      <div className="modal-part vr-state-list monoline-fields prim-slice-1">
+        <TaskDetailsCmp value={task} onChange={updateState} />
+      </div>
+      <div className="modal-part">
+        <input
+          type="submit"
+          value="+ Save"
+          onClick={mutate}
+          className="button"
+        />
+      </div>
     </form>
   );
 };

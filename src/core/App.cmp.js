@@ -1,5 +1,4 @@
 import React from "react";
-import "./App.cmp.css";
 import { TaskList } from "features/TaskList.cmp";
 import { ApolloClient, InMemoryCache, HttpLink } from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
@@ -8,6 +7,9 @@ import "libs/ezwn-ui/css/layout.css";
 import "libs/ezwn-ui/css/look-and-feel.css";
 import "libs/ezwn-ui/css/look-dark-bird.css";
 import "libs/ezwn-ui/css/components.css";
+import "libs/ezwn-ui/css/state-lists.css";
+import "./App.cmp.css";
+
 import { ModalProviderCmp } from "libs/ezwn-ui/react/modal/ModalOutput.cmp";
 import ModalContext from "libs/ezwn-ui/react/modal/Modal.context";
 import { TaskEdit } from "features/TaskEdit.cmp";
@@ -30,7 +32,7 @@ function App() {
             <ModalContext.Consumer>
               {showModal => (
                 <div
-                  className="square-button"
+                  className="square-button cursor-pointer"
                   onClick={() =>
                     showModal(<TaskEdit afterSubmit={() => showModal(null)} />)
                   }

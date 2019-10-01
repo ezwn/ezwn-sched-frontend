@@ -1,5 +1,33 @@
 import React from 'react';
   
+const naMsg = "No value"; 
+
+const SingleLineTextIO = ({ value, onChange, editable }) => editable
+      ? (<input type='text' value={ value } onChange={e => onChange(e.target.value)} className='input' />)
+      : value || naMsg;
+
+const SelectIO = ({ value, onChange, editable, choiceList }) => editable
+      ? (<select value={ value } onChange={e => onChange(e.target.value)} className='input'>
+      { choiceList.map(choice => <option value={choice.key} key={choice.key}>{choice.key}</option>) }
+      </select>)
+      : value || naMsg;
+      
+const NumberIO = ({ value, onChange, editable }) => editable
+      ? (<input type='number' value={ value } onChange={e => onChange(e.target.value)} className='input' />)
+      : value || naMsg;
+
+const MultipleLineTextIO = ({ value, onChange, editable }) => editable
+  ? (<textarea type='number' value={ value } onChange={e => onChange(e.target.value)} className='input' />)
+  : value || naMsg;
+
+const BooleanIO = ({ value, onChange, editable }) => editable
+    ? (<input type='checkbox' checked={ value } onChange={e => onChange(e.target.checked)} />)
+    : value || naMsg;
+
+const DateTimeIO = ({ value, onChange, editable }) => editable
+    ? (<input type='date' value={ value } onChange={e => onChange(e.target.value)} className='input' />)
+    : value || naMsg;
+
 /**
  * TaskDetailsCmp : displays the properties of an instance
  * of "Task".
@@ -14,6 +42,10 @@ export class TaskDetailsCmp extends React.Component {
       { name: 'status', editable: true }
     ];
 
+  static defaultProps = {
+    fields: TaskDetailsCmp.defaultFields
+  };
+
   constructor(props) {
     super(props);
 
@@ -24,17 +56,14 @@ export class TaskDetailsCmp extends React.Component {
       blocked: this.renderBlocked,
       status: this.renderStatus
     };
-
-    this.fields = props.fields || TaskDetailsCmp.defaultFields;
-
   }
 
   render() {
-    const { onChange, value } = this.props; 
+    const { onChange, value, fields } = this.props; 
 
     return (
       <div className='fieldset Task'>{
-        this.fields.map(field => this.fieldRenderers[field.name](
+        fields.map(field => this.fieldRenderers[field.name](
           value[field.name],
           field.editable ? !!onChange : false
         ))
@@ -44,78 +73,43 @@ export class TaskDetailsCmp extends React.Component {
 
   renderTasId = (value, editable) => (<div className='field tasId' key='tasId'>
     <div className='label'>id</div>
-    { editable
-      ? (<div className='value'><input type='number' value={ value } onChange={this.onTasIdChange} /></div>)
-      : (<div className='value'>{ value }</div>)
-    }
+    <div className='value'><NumberIO value={value} onChange={this.onTasIdChange} editable={editable} /></div>
   </div>)
 
-  onTasIdChange = (event) => {
-    const { onChange } = this.props;
-    const { value } = event.target;
- 
-    onChange({ tasId: parseInt(value) });
-  }
+  onTasIdChange = (value) =>
+    this.props.onChange({ tasId: parseInt(value) });
 
   renderTitle = (value, editable) => (<div className='field title' key='title'>
     <div className='label'>title</div>
-    { editable
-      ? (<div className='value'><input type='text' value={ value } onChange={this.onTitleChange} /></div>)
-      : (<div className='value'>{ value }</div>)
-    }
+    <div className='value'><SingleLineTextIO value={value} onChange={this.onTitleChange} editable={editable} /></div>
   </div>)
 
-  onTitleChange = (event) => {
-    const { onChange } = this.props;
-    const { value } = event.target;
- 
-    onChange({ title: value });
-  }
+  onTitleChange = (value) =>
+    this.props.onChange({ title: value });
 
   renderDescription = (value, editable) => (<div className='field description' key='description'>
     <div className='label'>description</div>
-    { editable
-      ? (<div className='value'><textarea type='text' value={ value } onChange={this.onDescriptionChange} /></div>)
-      : (<div className='value'>{ value }</div>)
-    }
+    <div className='value'><MultipleLineTextIO value={value} onChange={this.onDescriptionChange} editable={editable} /></div>
   </div>)
 
-  onDescriptionChange = (event) => {
-    const { onChange } = this.props;
-    const { value } = event.target;
- 
-    onChange({ description: value });
-  }
+  onDescriptionChange = (value) =>
+    this.props.onChange({ description: value });
 
   renderBlocked = (value, editable) => (<div className='field blocked' key='blocked'>
     <div className='label'>blocked</div>
-    { editable
-      ? (<div className='value'><input type='text' value={ value } onChange={this.onBlockedChange} /></div>)
-      : (<div className='value'>{ value }</div>)
-    }
+    <div className='value'><BooleanIO value={value} onChange={this.onBlockedChange} editable={editable} /></div>
   </div>)
 
-  onBlockedChange = (event) => {
-    const { onChange } = this.props;
-    const { value } = event.target;
- 
-    onChange({ blocked: value });
-  }
+  onBlockedChange = (value) =>
+    this.props.onChange({ blocked: value });
 
   renderStatus = (value, editable) => (<div className='field status' key='status'>
     <div className='label'>status</div>
-    { editable
-      ? (<div className='value'><input type='text' value={ value } onChange={this.onStatusChange} /></div>)
-      : (<div className='value'>{ value }</div>)
-    }
+    <div className='value'><SelectIO value={value} onChange={this.onStatusChange} editable={editable} choiceList={[{"key":"IDEA"},{"key":"TODO"},{"key":"IN_PROGRESS"},{"key":"DONE"}]} /></div>
   </div>)
 
-  onStatusChange = (event) => {
-    const { onChange } = this.props;
-    const { value } = event.target;
- 
-    onChange({ status: value });
-  }
+  onStatusChange = (value) =>
+    this.props.onChange({ status: value });
 }
 
 
@@ -132,6 +126,10 @@ export class ActionDetailsCmp extends React.Component {
       { name: 'details', editable: true }
     ];
 
+  static defaultProps = {
+    fields: ActionDetailsCmp.defaultFields
+  };
+
   constructor(props) {
     super(props);
 
@@ -141,17 +139,14 @@ export class ActionDetailsCmp extends React.Component {
       summary: this.renderSummary,
       details: this.renderDetails
     };
-
-    this.fields = props.fields || ActionDetailsCmp.defaultFields;
-
   }
 
   render() {
-    const { onChange, value } = this.props; 
+    const { onChange, value, fields } = this.props; 
 
     return (
       <div className='fieldset Action'>{
-        this.fields.map(field => this.fieldRenderers[field.name](
+        fields.map(field => this.fieldRenderers[field.name](
           value[field.name],
           field.editable ? !!onChange : false
         ))
@@ -161,61 +156,33 @@ export class ActionDetailsCmp extends React.Component {
 
   renderActId = (value, editable) => (<div className='field actId' key='actId'>
     <div className='label'>id</div>
-    { editable
-      ? (<div className='value'><input type='number' value={ value } onChange={this.onActIdChange} /></div>)
-      : (<div className='value'>{ value }</div>)
-    }
+    <div className='value'><NumberIO value={value} onChange={this.onActIdChange} editable={editable} /></div>
   </div>)
 
-  onActIdChange = (event) => {
-    const { onChange } = this.props;
-    const { value } = event.target;
- 
-    onChange({ actId: parseInt(value) });
-  }
+  onActIdChange = (value) =>
+    this.props.onChange({ actId: parseInt(value) });
 
   renderMoment = (value, editable) => (<div className='field moment' key='moment'>
     <div className='label'>moment</div>
-    { editable
-      ? (<div className='value'><input type='text' value={ value } onChange={this.onMomentChange} /></div>)
-      : (<div className='value'>{ value }</div>)
-    }
+    <div className='value'><DateTimeIO value={value} onChange={this.onMomentChange} editable={editable} /></div>
   </div>)
 
-  onMomentChange = (event) => {
-    const { onChange } = this.props;
-    const { value } = event.target;
- 
-    onChange({ moment: value });
-  }
+  onMomentChange = (value) =>
+    this.props.onChange({ moment: value });
 
   renderSummary = (value, editable) => (<div className='field summary' key='summary'>
     <div className='label'>summary</div>
-    { editable
-      ? (<div className='value'><input type='text' value={ value } onChange={this.onSummaryChange} /></div>)
-      : (<div className='value'>{ value }</div>)
-    }
+    <div className='value'><SingleLineTextIO value={value} onChange={this.onSummaryChange} editable={editable} /></div>
   </div>)
 
-  onSummaryChange = (event) => {
-    const { onChange } = this.props;
-    const { value } = event.target;
- 
-    onChange({ summary: value });
-  }
+  onSummaryChange = (value) =>
+    this.props.onChange({ summary: value });
 
   renderDetails = (value, editable) => (<div className='field details' key='details'>
     <div className='label'>details</div>
-    { editable
-      ? (<div className='value'><textarea type='text' value={ value } onChange={this.onDetailsChange} /></div>)
-      : (<div className='value'>{ value }</div>)
-    }
+    <div className='value'><MultipleLineTextIO value={value} onChange={this.onDetailsChange} editable={editable} /></div>
   </div>)
 
-  onDetailsChange = (event) => {
-    const { onChange } = this.props;
-    const { value } = event.target;
- 
-    onChange({ details: value });
-  }
+  onDetailsChange = (value) =>
+    this.props.onChange({ details: value });
 }
