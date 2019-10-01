@@ -14,7 +14,7 @@ export const findTasksQuery = gql`
 `;
 
 export const saveTaskMutation = gql`
-  mutation($tasId: Int!, $title: String!, $description: String, $blocked: Boolean!, $status: String!) {
+  mutation($tasId: Int, $title: String!, $description: String, $blocked: Boolean!, $status: String!) {
     saveTask(tasId: $tasId, title: $title, description: $description, blocked: $blocked, status: $status) {
       tasId
       title
@@ -26,7 +26,7 @@ export const saveTaskMutation = gql`
 `;
 
 export const saveActionMutation = gql`
-  mutation($actId: Int!, $moment: String!, $summary: String, $details: String, $task: Task!) {
+  mutation($actId: Int, $moment: String!, $summary: String, $details: String, $task: Task!) {
     saveAction(actId: $actId, moment: $moment, summary: $summary, details: $details, task: $task) {
       actId
       moment
