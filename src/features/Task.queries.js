@@ -8,7 +8,13 @@ export const findTasksQuery = gql`
       title
       description
       blocked
-      status
+      status,
+      actions {
+        actId
+        moment
+        summary
+        details
+      }
     }
   }
 `;
@@ -26,13 +32,9 @@ export const saveTaskMutation = gql`
 `;
 
 export const saveActionMutation = gql`
-  mutation($actId: Int, $moment: String!, $summary: String, $details: String, $task: Task!) {
+  mutation($actId: Int, $moment: DateTime!, $summary: String, $details: String, $task: Int!) {
     saveAction(actId: $actId, moment: $moment, summary: $summary, details: $details, task: $task) {
       actId
-      moment
-      summary
-      details
-      task
     }
   }
 `;
