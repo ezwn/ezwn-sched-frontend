@@ -20,7 +20,7 @@ const TaksListDumb = ({ data }) => {
               key={task.tasId}
               onClick={() =>
                 showModal(
-                  <TaskEdit value={task} afterSubmit={() => showModal(null)} />
+                  <TaskEdit tasId={task.tasId} afterSubmit={() => showModal(null)} />
                 )
               }
             >

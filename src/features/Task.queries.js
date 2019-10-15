@@ -8,6 +8,18 @@ export const findTasksQuery = gql`
       title
       description
       blocked
+      status
+    }
+  }
+`;
+
+export const findTaskQuery = gql`
+  query($tasId: Int) {
+    findTask(tasId: $tasId) {
+      tasId
+      title
+      description
+      blocked
       status,
       actions {
         actId

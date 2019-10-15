@@ -3,17 +3,21 @@ import { graphql } from "react-apollo";
 import {
   findTasksQuery,
   saveTaskMutation,
-  saveActionMutation
+  saveActionMutation,
+  findTaskQuery
 } from "./Task.queries";
 import { flowRight as compose } from "lodash";
 import { TaskDetailsCmp } from "./auto-components";
 
 import "./TaskEdit.cmp.css";
+import { withLoader } from "./withLoader.hoc";
 
 export const TaskEditDumb = props => {
+  const { findTask: value } = props.findTaskQuery;
+
   const [task, setTask] = React.useState(
-    props.value
-      ? props.value
+    value
+      ? value
       : {
           tasId: undefined,
           title: "",
@@ -22,6 +26,8 @@ export const TaskEditDumb = props => {
           status: "IDEA"
         }
   );
+
+  console.log({ value, task });
 
   const saveTaskMutation = () => {
     props.saveTaskMutation({
@@ -93,6 +99,16 @@ export const TaskEditDumb = props => {
 };
 
 export const TaskEdit = compose(
+  graphql(findTaskQuery, {
+    name: "findTaskQuery",
+    options: ({ tasId }) => {
+      return {
+        variables: {
+          tasId
+        }
+      };
+    }
+  }),
   graphql(saveTaskMutation, { name: "saveTaskMutation" }),
   graphql(saveActionMutation, { name: "saveActionMutation" })
-)(TaskEditDumb);
+)(withLoader(TaskEditDumb, "findTaskQuery"));
