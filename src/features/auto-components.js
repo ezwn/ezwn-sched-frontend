@@ -3,29 +3,29 @@ import React from 'react';
 const naMsg = "No value"; 
 
 const SingleLineTextIO = ({ value, onChange, editable }) => editable
-      ? (<input type='text' value={ value } onChange={e => onChange(e.target.value)} className='input' />)
+      ? (<input type='text' value={value || ""} onChange={e => onChange(e.target.value)} className='input' />)
       : value || naMsg;
 
 const SelectIO = ({ value, onChange, editable, choiceList }) => editable
-      ? (<select value={ value } onChange={e => onChange(e.target.value)} className='input'>
+      ? (<select value={value} onChange={e => onChange(e.target.value)} className='input'>
       { choiceList.map(choice => <option value={choice.key} key={choice.key}>{choice.key}</option>) }
       </select>)
       : value || naMsg;
       
 const NumberIO = ({ value, onChange, editable }) => editable
-      ? (<input type='number' value={ value } onChange={e => onChange(e.target.value)} className='input' />)
+      ? (<input type='number' value={value || 0} onChange={e => onChange(e.target.value)} className='input' />)
       : value || naMsg;
 
 const MultipleLineTextIO = ({ value, onChange, editable }) => editable
-  ? (<textarea type='number' value={ value } onChange={e => onChange(e.target.value)} className='input' />)
+  ? (<textarea type='number' value={value || ""} onChange={e => onChange(e.target.value)} className='input' />)
   : value || naMsg;
 
 const BooleanIO = ({ value, onChange, editable }) => editable
-    ? (<input type='checkbox' checked={ value } onChange={e => onChange(e.target.checked)} />)
+    ? (<input type='checkbox' checked={!!value} onChange={e => onChange(e.target.checked)} />)
     : value || naMsg;
 
 const DateTimeIO = ({ value, onChange, editable }) => editable
-    ? (<input type='date' value={ value } onChange={e => onChange(e.target.value)} className='input' />)
+    ? (<input type='date' value={value} onChange={e => onChange(e.target.value)} className='input' />)
     : value || naMsg;
 
 /**
@@ -59,10 +59,10 @@ export class TaskDetailsCmp extends React.Component {
   }
 
   render() {
-    const { onChange, value, fields } = this.props; 
+    const { onChange, value, fields, className } = this.props; 
 
     return (
-      <div className='fieldset Task'>{
+      <div className={'fieldset Task' + (className ? ' ' + className : '')}>{
         fields.map(field => this.fieldRenderers[field.name](
           value[field.name],
           field.editable ? !!onChange : false
@@ -142,10 +142,10 @@ export class ActionDetailsCmp extends React.Component {
   }
 
   render() {
-    const { onChange, value, fields } = this.props; 
+    const { onChange, value, fields, className } = this.props; 
 
     return (
-      <div className='fieldset Action'>{
+      <div className={'fieldset Action' + (className ? ' ' + className : '')}>{
         fields.map(field => this.fieldRenderers[field.name](
           value[field.name],
           field.editable ? !!onChange : false
