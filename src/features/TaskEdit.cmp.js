@@ -1,7 +1,6 @@
 import React from "react";
 import { graphql } from "react-apollo";
 import {
-  findTasksQuery,
   saveTaskMutation,
   saveActionMutation,
   findTaskQuery
@@ -36,7 +35,7 @@ export const TaskEditDumb = props => {
       },
       refetchQueries: [
         {
-          query: findTasksQuery
+          query: findTaskQuery
         }
       ]
     });
@@ -51,7 +50,10 @@ export const TaskEditDumb = props => {
       },
       refetchQueries: [
         {
-          query: findTasksQuery
+          query: findTaskQuery,
+          variables: {
+            tasId: props.tasId
+          }
         }
       ]
     });
