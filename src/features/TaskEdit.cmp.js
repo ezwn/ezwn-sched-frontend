@@ -6,17 +6,17 @@ import {
   findTaskQuery
 } from "./Task.queries";
 import { flowRight as compose } from "lodash";
-import { TaskDetailsCmp } from "./auto-components";
+import { TaskDetailsCmp, ActionDetailsCmp } from "./auto-components";
 
 import "./TaskEdit.cmp.css";
 import { withLoader } from "./withLoader.hoc";
 
 export const TaskEditDumb = props => {
-  const { findTask: value } = props.findTaskQuery;
+  // console.log(props.findTaskQuery);
 
   const [task, setTask] = React.useState(
-    value
-      ? value
+    props.findTaskQuery.findTask
+      ? props.findTaskQuery.findTask
       : {
           tasId: undefined,
           title: "",
@@ -25,8 +25,6 @@ export const TaskEditDumb = props => {
           status: "IDEA"
         }
   );
-
-  console.log({ value, task });
 
   const saveTaskMutation = () => {
     props.saveTaskMutation({
@@ -43,34 +41,42 @@ export const TaskEditDumb = props => {
     props.afterSubmit();
   };
 
-  const saveActionMutation = action => {
-    props.saveActionMutation({
-      variables: {
-        ...action
-      },
-      refetchQueries: [
-        {
-          query: findTaskQuery,
-          variables: {
-            tasId: props.tasId
-          }
-        }
-      ]
-    });
-  };
+  // const saveActionMutation = action => {
+  //   props.saveActionMutation({
+  //     variables: {
+  //       ...action
+  //     },
+  //     refetchQueries: [
+  //       {
+  //         query: findTaskQuery,
+  //         variables: {
+  //           tasId: props.tasId
+  //         }
+  //       }
+  //     ]
+  //   });
+  // };
 
-  const updateState = patch => {
+  const patchTask = patch => {
     setTask({ ...task, ...patch });
   };
 
-  const newAction = () => {
-    saveActionMutation({
-      actId: null,
-      moment: `1996-12-19T16:39:57-08:00`, // ${new Date().toISOString().substring(0,)}
+  const patchAction = patch => {
+    console.log(patch);
+  };
+
+  const addNewAction = () => {
+    const time = new Date().toISOString();
+
+    const action = {
+      actId: `NEW_${time}`,
+      moment: `1996-12-19T16:39:57-08:00`,
       summary: "action summary (title)",
       details: "",
       task: task.tasId
-    });
+    };
+    // saveActionMutation(action);
+    setTask({ ...task, actions: [...task.actions, action] });
   };
 
   return (
@@ -79,12 +85,20 @@ export const TaskEditDumb = props => {
       className="taskEdit prim-slice-1 prim-vr"
     >
       <div className="modal-part vr-state-list monoline-fields prim-slice-1">
-        <TaskDetailsCmp value={task} onChange={updateState} />
+        <TaskDetailsCmp value={task} onChange={patchTask} />
         <h2>Actions</h2>
         {task.actions.map(act => (
-          <div key={act.actId}>{act.summary}</div>
+          <ActionDetailsCmp
+            key={act.actId}
+            value={act}
+            onChange={patchAction}
+            fields={ActionDetailsCmp.defaultFields.filter(
+              f => f.name !== "actId"
+            )}
+          />
         ))}
-        <div className="square-button cursor-pointer" onClick={newAction}>
+
+        <div className="square-button cursor-pointer" onClick={addNewAction}>
           +
         </div>
       </div>
